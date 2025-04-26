@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Align(
+            Align( //Title
               alignment: Alignment.topCenter,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
@@ -78,12 +78,12 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
+            Container( //separator line
               width: MediaQuery.of(context).size.width * 0.8,
               height: 2,
               color: Color(0xFFEF433A),
             ),
-            Container(
+            Container( //description box
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: const Center(
@@ -98,13 +98,13 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
+              Container( //separator line
               width: MediaQuery.of(context).size.width * 0.8,
               height: 2,
               color: Color(0xFFEF433A),
             ),
             const SizedBox(height: 16),
-            Container(
+            Container( //instruction box
               width: MediaQuery.of(context).size.width * 0.8,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
+                  const Text( //instructions title
                     'Instructions',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -126,17 +126,17 @@ class MyApp extends StatelessWidget {
                       fontFamily: 'Silkscreen',
                     ),
                   ),
-                  const SizedBox(height: 16), // Spacing between items
-                  Container(
-                    width: double.infinity, // Fills the parent container width
+                  const SizedBox(height: 16), // in html, padding basically
+                  Container( //inner instructions box
+                    width: double.infinity, // in html, width: 100%;
                     padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
                     decoration: BoxDecoration(
                       color: Color(0xFF111D33),
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    child: Column( //actual instructions + start button
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [ //inside the instructions inner box
                       const SizedBox(height: 10),
                       const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,36 +178,256 @@ class MyApp extends StatelessWidget {
                       ),
                       const SizedBox(height: 50),
                       Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF14ADFF),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: const BorderSide(
-                                color: Color(0xFF00568D),
-                                width: 1.5,
-                              )
-                            ),
-                          ),
-                          onPressed: () {
-                            print('Custom button pressed!');//the start overlay thingy here
-                          },
-                          child: Text(
-                            'Start',
-                            style: TextStyle(
-                              fontFamily: 'Silkscreen',
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
+  // Start button
+  child: ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Color(0xFF14ADFF),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(
+          color: Color(0xFF00568D),
+          width: 1.5,
+        ),
+      ),
+    ),
+    onPressed: () {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 🔽 Overlay Container (Top Section)
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF111D33),
+                    border: Border.all(color: Color(0xFF14476A), width: 2),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Start the Quiz?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Silkscreen',
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              'This quiz will test your understanding of Java programming fundamentals.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              "Make sure you're ready before starting.",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              'Good luck!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                ),
+
+                // 🔽 Overlay Button (Bottom Section)
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    // TODO: Add your quiz start logic here
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF14ADFF),
+                      border: Border.all(color: Color(0xFF00568D), width: 2),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      'Start the Quiz',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontFamily: 'Silkscreen',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+    child: Text(
+      'Start',
+      style: TextStyle(
+        fontFamily: 'Silkscreen',
+        fontSize: 16,
+        color: Colors.white,
+      ),
+    ),
+  ),
+),
+
+                    ],
+                    ),
                   ),
                 ],
               ),
             ),
+            /*Container(
+              width: MediaQuery.of(context).size.width * 0.6,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Color(0xFF111D33),
+                border: Border.all(color: Color(0xFF14476A), width: 2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                ),
+              ),
+              child: Column(
+                children: [
+                  const Text( //start the quiz?
+                    'Start the Quiz?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontFamily: 'Silkscreen',
+                    ),
+                  ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              'This quiz will test your understanding of Java programming fundamentals.',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              "Make sure you're ready before starting.",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ', style: TextStyle(fontSize: 16, color: Colors.white)),
+                          Expanded(
+                            child: Text(
+                              'Good luck!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                ),
+                            ),
+                          ),
+                        ],
+                      ),
+                ],),
+            ),
+            Container( //Start Button for overlay
+              width: MediaQuery.of(context).size.width * 0.6,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Color(0xFF14ADFF),
+                border: Border.all(color: Color(0xFF00568D), width: 2),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+                ),
+              ),
+              child: const Text( //start the quiz?
+                    'Start the Quiz?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'Silkscreen',
+                    ),
+                  ),
+            ),*/
           ],
         ),
       ),
