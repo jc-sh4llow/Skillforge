@@ -35,19 +35,10 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // Method to navigate to the quiz screen
-  /*void _navigateToQuizScreen(BuildContext context) {
-     This will be implemented to navigate to the quiz screen when ready
-     For now, just close the dialog to demonstrate it works
-    print('Navigating to quiz screen...');
-     You would replace this with actual navigation code
-     For example: Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuizScreen()));
-  }*/
-
   void _showStartQuizDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: true, // This allows closing by clicking outside
+      barrierDismissible: true,
       builder: (BuildContext dialogContext) {
         return Dialog(
           backgroundColor: Colors.transparent,
@@ -105,9 +96,7 @@ class _MyAppState extends State<MyApp> {
                     minimumSize: Size(MediaQuery.of(context).size.width * 0.6, 0),
                   ),
                   onPressed: () {
-                    // Close the dialog
                     Navigator.of(dialogContext).pop();
-                    // Navigate to the quiz screen
                     _navigateToQuizScreen(context);
                   },
                   child: Container(
@@ -137,7 +126,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Builder(  // Add Builder here to get a proper context
+      home: Builder(
         builder: (context) => Scaffold(
           backgroundColor: const Color(0xFF010B1E),
           appBar: AppBar(
