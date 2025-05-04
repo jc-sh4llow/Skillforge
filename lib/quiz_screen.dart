@@ -1,32 +1,24 @@
-import 'package:flutter/material.dart'; // Imports the Flutter material design package
-import 'dart:math'; // Import for additional randomization functions if needed
+import 'package:flutter/material.dart';
+import 'dart:math';
 
-// Main quiz screen widget that maintains state
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key}); // Constructor with optional key parameter
+  const QuizScreen({super.key});
 
   @override
-  // Creates the mutable state for this widget
   State<QuizScreen> createState() => _QuizScreenState();
 }
 
-// The state class for the QuizScreen widget
 class _QuizScreenState extends State<QuizScreen> {
-  // Comment template for developers to add more questions to the quiz
   // {
   //   'question': 'Your question here?',
   //   'options': ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
   //   'answer': 'Correct Option',
   // },
-
-  // List of questions for the quiz
-  // Each question is a Map with 'question', 'options', and 'answer' keys
-  // We'll shuffle this list in initState to randomize questions
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What was Java originally called?',
       'options': ['Maple', 'JavaScript', 'Oak', 'Spruce'],
-      'answer': 'Oak', // Correct answer
+      'answer': 'Oak',
     },
     {
       'question': 'Who is known as the creator of Java?',
@@ -36,12 +28,12 @@ class _QuizScreenState extends State<QuizScreen> {
         'Bjarne Stroustrup',
         'Guido van Rossum',
       ],
-      'answer': 'James Gosling', // Correct answer
+      'answer': 'James Gosling',
     },
     {
       'question': 'What year was Java Created?',
       'options': ['1990', '1992', '1995', '2000'],
-      'answer': '1992', // Correct answer
+      'answer': '1992',
     },
     {
       'question': 'What is the main purpose of writing source code?',
@@ -160,34 +152,28 @@ class _QuizScreenState extends State<QuizScreen> {
     },
   ];
 
-  int _currentIndex = 0; // Tracks the current question index
+  int _currentIndex = 0;
   String?
-  _selectedAnswer; // Stores the user's selected answer (null if nothing selected)
-  int _score = 0; // Keeps track of the user's score
+  _selectedAnswer;
+  int _score = 0;
 
   @override
   void initState() {
     super.initState();
-    // Shuffle the questions list when the widget is initialized
-    // This ensures questions appear in a random order each time the quiz is opened
     _questions.shuffle();
   }
 
-  // Function to handle moving to the next question or to results screen
   void _nextQuestion() {
-    // Check if the selected answer is correct and update score
     if (_selectedAnswer == _questions[_currentIndex]['answer']) {
       _score++;
     }
 
-    // If there are more questions, move to the next one
     if (_currentIndex < _questions.length - 1) {
       setState(() {
-        _currentIndex++; // Move to next question
-        _selectedAnswer = null; // Reset selected answer
+        _currentIndex++;
+        _selectedAnswer = null;
       });
     } else {
-      // If no more questions, navigate to the results screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -199,13 +185,139 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  Future<bool> _showConfirmSkipDialog(BuildContext context) async {
+    bool skipConfirmed = false;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Color(0xFF19253E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: Color(0xFF33415C), width: 2),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Skip this question?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+
+                Text(
+                  "You haven't answered this question",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Are you sure you want to skip?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "You won't be able to return to it later",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 30),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          skipConfirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFE74C3C),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'SKIP',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF14ADDF),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'STAY',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    return skipConfirmed;
+  }
+
   @override
-  // Main UI build method for the quiz screen
   Widget build(BuildContext context) {
-    final current = _questions[_currentIndex]; // Get the current question
+    final current = _questions[_currentIndex];
+    final isLastQuestion =
+        _currentIndex ==
+        _questions.length - 1;
 
     return Scaffold(
-      // Top app bar showing current question number
       backgroundColor: const Color(0xFF010B1E),
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -223,7 +335,6 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // This is what the default back button does
                 Navigator.of(context).pop();
               },
               child: Container(
@@ -234,10 +345,8 @@ class _QuizScreenState extends State<QuizScreen> {
                   border: Border.all(color: const Color(0xFF45B6FE), width: 1),
                 ),
                 child: Row(
-                  // Removed const so it can have a non-const parent
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    // Added const here instead
                     Icon(Icons.close, color: Color(0xFF45B6FE)),
                     SizedBox(width: 8),
                     Text(
@@ -257,14 +366,10 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
         ),
-        //title: Text('Question ${_currentIndex + 1}/${_questions.length}'),
-        //automaticallyImplyLeading: true, // Disables the back button in app bar
       ),
-      // Main content of the screen
       body: Padding(
-        padding: const EdgeInsets.all(20), // Adds padding around the content
+        padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
-          // Wrap with a scrollable view
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -300,77 +405,284 @@ class _QuizScreenState extends State<QuizScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.black26,
-                  border: Border.all(color: Colors.blueAccent, width: 2),
+                  border: Border.all(color: Color(0xFFA29193), width: 2),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Display the current question text (centered)
                     Center(
                       child: Text(
-                        //QUESTION
-                        current['question'],
-                        textAlign:
-                            TextAlign.center, // Center-aligns the text content
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                        'Question ${_currentIndex + 1}/${_questions.length}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Silkscreen',
+                          fontSize: 19,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFFB8A4A4),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20), // Adds vertical spacing
-
-                    // Dynamically creates a list of option tiles based on current question options
-                    // Alternative method for centering text in ListTiles
-                    // This may be better if you want to preserve the ListTile's original layout
-                    ...current['options'].map<Widget>((option) {
-                      final isSelected = option == _selectedAnswer;
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: ListTile(
-                          contentPadding:
-                              EdgeInsets.zero, // Remove default padding
-                          title: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  option,
-                                  textAlign:
-                                      TextAlign
-                                          .center, // Center-aligns the text
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF111D33),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Text(
+                              //QUESTION
+                              current['question'],
+                              textAlign:
+                                  TextAlign
+                                      .center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
+                            ),
                           ),
-                          tileColor: isSelected ? Colors.blue[100] : null,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          const SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xFF33415C),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              children: [
+                                ...current['options'].asMap().entries.map((
+                                  entry,
+                                ) {
+                                  final index = entry.key;
+                                  final option = entry.value;
+                                  final isSelected = option == _selectedAnswer;
+                                  final bgColor =
+                                      index % 2 == 0
+                                          ? Color(0xFF19253E)
+                                          : Color(0xFF111D33);
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          isSelected
+                                              ? Colors.blue[100]
+                                              : bgColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              option,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color:
+                                                    isSelected
+                                                        ? Colors.black
+                                                        : Colors.white,
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedAnswer = option;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ],
+                            ),
                           ),
-                          onTap: () {
-                            setState(() {
-                              _selectedAnswer = option;
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
+                          const SizedBox(height: 20),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(top: 20),
+                            child:
+                                isLastQuestion
+                                    ? Container(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed:
+                                            _selectedAnswer != null
+                                                ? _nextQuestion
+                                                : null,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(
+                                            0xFF2ECC71,
+                                          ),
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            side: BorderSide(
+                                              color: Color(0xFF33415C),
+                                              width: 2,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 15,
+                                          ),
+                                          disabledBackgroundColor:
+                                              Color.fromARGB(
+                                                (0xFF * 0.5)
+                                                    .round(),
+                                                0x2E,
+                                                0xCC,
+                                                0x71,
+                                              ),
+                                          disabledForegroundColor: Colors.white
+                                              .withAlpha(128),
+                                        ),
+                                        child: const Text(
+                                          'SUBMIT',
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.41,
+                                          child: ElevatedButton(
+                                            onPressed:
+                                                _selectedAnswer == null
+                                                    ? () async {
+                                                      bool shouldSkip =
+                                                          await _showConfirmSkipDialog(
+                                                            context,
+                                                          );
+                                                      if (shouldSkip) {
+                                                        _nextQuestion();
+                                                      }
+                                                    }
+                                                    : null,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(
+                                                0xFFE74C3C,
+                                              ),
+                                              foregroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                side: BorderSide(
+                                                  color: Color(0xFF33415C),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 15,
+                                              ),
+                                              disabledBackgroundColor:
+                                                  Color.fromARGB(
+                                                    (0xFF * 0.5)
+                                                        .round(),
+                                                    0xE7,
+                                                    0x4C,
+                                                    0x3C,
+                                                  ),
+                                              disabledForegroundColor: Colors
+                                                  .white
+                                                  .withAlpha(
+                                                    128,
+                                                  ),
+                                            ),
+                                            child: const Text(
+                                              'SKIP',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
 
-                    const SizedBox(height: 20),
-
-                    // Next button at the bottom center
-                    Center(
-                      child: ElevatedButton(
-                        onPressed:
-                            _selectedAnswer != null ? _nextQuestion : null,
-                        child: const Text('Next'),
+                                        Container(
+                                          width:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.width *
+                                              0.41,
+                                          child: ElevatedButton(
+                                            onPressed:
+                                                _selectedAnswer != null
+                                                    ? _nextQuestion
+                                                    : null,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(
+                                                0xFF19253E,
+                                              ),
+                                              foregroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                side: BorderSide(
+                                                  color: Color(0xFF33415C),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 15,
+                                              ),
+                                              disabledBackgroundColor:
+                                                  Color.fromARGB(
+                                                    (0xFF * 0.5)
+                                                        .round(),
+                                                    0x19,
+                                                    0x25,
+                                                    0x3E,
+                                                  ),
+                                              disabledForegroundColor: Colors
+                                                  .white
+                                                  .withAlpha(
+                                                    128,
+                                                  ),
+                                            ),
+                                            child: const Text(
+                                              'NEXT',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -384,24 +696,269 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 }
 
-// Stateless widget for displaying the final quiz results
 class ResultScreen extends StatelessWidget {
-  final int score; // User's final score
-  final int total; // Total number of questions
+  final int score;
+  final int total;
 
-  // Constructor requiring score and total parameters
   const ResultScreen({super.key, required this.score, required this.total});
 
   @override
-  // Build method for the results screen UI
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Quiz Complete')), // App bar with title
-      // Center the score text in the middle of the screen
-      body: Center(
-        child: Text(
-          'You scored $score out of $total!', // Displays the final score
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      backgroundColor: const Color(0xFF010B1E),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFF010B1E),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 25),
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 45,
+                height: 45,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(5, 5, 15, 5),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: const Color(0xFF45B6FE), width: 1),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.close, color: Color(0xFF45B6FE)),
+                    SizedBox(width: 8),
+                    Text(
+                      'Close',
+                      style: TextStyle(color: Color(0xFF45B6FE), fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              padding: const EdgeInsets.only(right: 25),
+              iconSize: 30,
+              color: const Color(0xFF45B6FE),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: const Center(
+                    child: Text(
+                      'Fundamentals of Java Programming',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Silkscreen',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 2,
+                color: const Color(0xFFEF433A),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: MediaQuery.of(context).size.height * 0.65,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black26,
+                  border: Border.all(color: Color(0xFFA29193), width: 2),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Quiz Submitted!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Silkscreen',
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFF111D33),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 24),
+                          Center(
+                            child: Text(
+                              'Your answers have been successfully submitted.',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Text(
+                              'Thank you for completing the quiz!',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          Text(
+                            'SCORE',
+                            style: TextStyle(
+                              color: Color(0xFFB8A4A4),
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Silkscreen',
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            decoration: BoxDecoration(
+                              color: Color(0xFF19253E),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Color(0xFF33415C),
+                                width: 2,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$score / $total',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          Container(
+                            width: double.infinity,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.41,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      //for answers screen
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(
+                                        0xFF0E87C6,
+                                      ),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: BorderSide(
+                                          color: Color(0xFF33415C),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 15,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'ANSWERS',
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.41,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(
+                                        0xFF877C7F,
+                                      ),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: BorderSide(
+                                          color: Color(0xFF33415C),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 15,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'EXIT',
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
