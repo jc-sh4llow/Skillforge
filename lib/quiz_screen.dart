@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+// import 'homepagefilenamehere.dart';
+
+
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -9,11 +12,6 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  // {
-  //   'question': 'question here',
-  //   'options': ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-  //   'answer': 'Correct answer',
-  // },
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What was Java originally called?',
@@ -317,6 +315,252 @@ class _QuizScreenState extends State<QuizScreen> {
     return skipConfirmed;
   }
 
+  Future<bool> _showConfirmExitDialog(BuildContext context) async {
+    bool exitConfirmed = false;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Color(0xFF19253E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: Color(0xFF33415C), width: 2),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Exit the quiz?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+
+                Text(
+                  "Your progress will not be saved.",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "If you leave now, you'll have to start over when you return",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 30),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          exitConfirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFE74C3C),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Color(0xFF00568D),
+                              width: 2,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'EXIT',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF14ADFF),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Color(0xFF00568D),
+                              width: 2,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'STAY',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    return exitConfirmed;
+  }
+
+  Future<bool> _showConfirmHomeDialog(BuildContext context) async {
+    bool homeConfirmed = false;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Color(0xFF19253E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: Color(0xFF33415C), width: 2),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Exit to Home Screen?',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+
+                Text(
+                  "Are you sure you want to exit the quiz and return to the home screen?",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Your progress will not be saved",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Montserrat',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 30),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          homeConfirmed = true;
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFE74C3C),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Color(0xFF00568D),
+                              width: 2,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'HOME',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF14ADFF),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Color(0xFF00568D),
+                              width: 2,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: Text(
+                          'STAY',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    return homeConfirmed;
+  }
+
   @override
   Widget build(BuildContext context) {
     final current = _questions[_currentIndex];
@@ -330,17 +574,34 @@ class _QuizScreenState extends State<QuizScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 25),
-              child: Image.asset(
-                'assets/images/logo.png',
-                width: 45,
-                height: 45,
+            GestureDetector(
+              onTap: () async {
+                bool shouldGoHome = await _showConfirmHomeDialog(context);
+                if (shouldGoHome) {
+                  Navigator.of(context,).pushNamedAndRemoveUntil(
+                    '/', //homepage filename here instead of /
+                    (route) => false
+                  );
+                  // need to change '/' into '/homepagefilename.dart'
+                  //for testing lng yung '/'
+                  //right now, sa main quiz screen palang yung balik nito
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 45,
+                  height: 45,
+                ),
               ),
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
+              onTap: () async {
+                bool shouldExit = await _showConfirmExitDialog(context);
+                if (shouldExit) {
+                  Navigator.of(context).pop();
+                }
               },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(5, 5, 15, 5),
