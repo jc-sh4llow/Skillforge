@@ -10,9 +10,9 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   // {
-  //   'question': 'Your question here?',
+  //   'question': 'question here',
   //   'options': ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-  //   'answer': 'Correct Option',
+  //   'answer': 'Correct answer',
   // },
   final List<Map<String, dynamic>> _questions = [
     {
@@ -153,17 +153,20 @@ class _QuizScreenState extends State<QuizScreen> {
   ];
 
   int _currentIndex = 0;
-  String?
-  _selectedAnswer;
+  String? _selectedAnswer;
   int _score = 0;
+  late List<String?> _userAnswers;
 
   @override
   void initState() {
     super.initState();
     _questions.shuffle();
+    _userAnswers = List.filled(_questions.length, null);
   }
 
   void _nextQuestion() {
+    _userAnswers[_currentIndex] = _selectedAnswer;
+
     if (_selectedAnswer == _questions[_currentIndex]['answer']) {
       _score++;
     }
@@ -178,8 +181,12 @@ class _QuizScreenState extends State<QuizScreen> {
         context,
         MaterialPageRoute(
           builder:
-              (context) =>
-                  ResultScreen(score: _score, total: _questions.length),
+              (context) => ResultScreen(
+                score: _score,
+                total: _questions.length,
+                questions: _questions,
+                userAnswers: _userAnswers,
+              ),
         ),
       );
     }
@@ -313,9 +320,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     final current = _questions[_currentIndex];
-    final isLastQuestion =
-        _currentIndex ==
-        _questions.length - 1;
+    final isLastQuestion = _currentIndex == _questions.length - 1;
 
     return Scaffold(
       backgroundColor: const Color(0xFF010B1E),
@@ -401,7 +406,6 @@ class _QuizScreenState extends State<QuizScreen> {
               const SizedBox(height: 16),
               Container(
                 width: MediaQuery.of(context).size.width * 0.95,
-                height: MediaQuery.of(context).size.height * 0.65,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.black26,
@@ -434,11 +438,8 @@ class _QuizScreenState extends State<QuizScreen> {
                           const SizedBox(height: 16),
                           Center(
                             child: Text(
-                              //QUESTION
                               current['question'],
-                              textAlign:
-                                  TextAlign
-                                      .center,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -527,9 +528,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 ? _nextQuestion
                                                 : null,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(
-                                            0xFF2ECC71,
-                                          ),
+                                          backgroundColor: Color(0xFF2ECC71),
                                           foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -545,8 +544,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           ),
                                           disabledBackgroundColor:
                                               Color.fromARGB(
-                                                (0xFF * 0.5)
-                                                    .round(),
+                                                (0xFF * 0.5).round(),
                                                 0x2E,
                                                 0xCC,
                                                 0x71,
@@ -605,17 +603,14 @@ class _QuizScreenState extends State<QuizScreen> {
                                               ),
                                               disabledBackgroundColor:
                                                   Color.fromARGB(
-                                                    (0xFF * 0.5)
-                                                        .round(),
+                                                    (0xFF * 0.5).round(),
                                                     0xE7,
                                                     0x4C,
                                                     0x3C,
                                                   ),
                                               disabledForegroundColor: Colors
                                                   .white
-                                                  .withAlpha(
-                                                    128,
-                                                  ),
+                                                  .withAlpha(128),
                                             ),
                                             child: const Text(
                                               'SKIP',
@@ -657,17 +652,14 @@ class _QuizScreenState extends State<QuizScreen> {
                                               ),
                                               disabledBackgroundColor:
                                                   Color.fromARGB(
-                                                    (0xFF * 0.5)
-                                                        .round(),
+                                                    (0xFF * 0.5).round(),
                                                     0x19,
                                                     0x25,
                                                     0x3E,
                                                   ),
                                               disabledForegroundColor: Colors
                                                   .white
-                                                  .withAlpha(
-                                                    128,
-                                                  ),
+                                                  .withAlpha(128),
                                             ),
                                             child: const Text(
                                               'NEXT',
@@ -699,8 +691,16 @@ class _QuizScreenState extends State<QuizScreen> {
 class ResultScreen extends StatelessWidget {
   final int score;
   final int total;
+  final List<Map<String, dynamic>> questions;
+  final List<String?> userAnswers;
 
-  const ResultScreen({super.key, required this.score, required this.total});
+  const ResultScreen({
+    super.key,
+    required this.score,
+    required this.total,
+    required this.questions,
+    required this.userAnswers,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -788,7 +788,6 @@ class ResultScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Container(
                 width: MediaQuery.of(context).size.width * 0.95,
-                height: MediaQuery.of(context).size.height * 0.65,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.black26,
@@ -884,15 +883,22 @@ class ResultScreen extends StatelessWidget {
                               children: [
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.41,
+                                      MediaQuery.of(context).size.width * .41,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      //for answers screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => AnswersScreen(
+                                                questions: questions,
+                                                userAnswers: userAnswers,
+                                              ),
+                                        ),
+                                      );
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(
-                                        0xFF0E87C6,
-                                      ),
+                                      backgroundColor: Color(0xFF0E87C6),
                                       foregroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -923,9 +929,7 @@ class ResultScreen extends StatelessWidget {
                                       Navigator.of(context).pop();
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(
-                                        0xFF877C7F,
-                                      ),
+                                      backgroundColor: Color(0xFF877C7F),
                                       foregroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -960,6 +964,569 @@ class ResultScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AnswersScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> questions;
+  final List<String?> userAnswers;
+
+  const AnswersScreen({
+    super.key,
+    required this.questions,
+    required this.userAnswers,
+  });
+
+  @override
+  State<AnswersScreen> createState() => _AnswersScreenState();
+}
+
+class _AnswersScreenState extends State<AnswersScreen> {
+  int _currentIndex = 0;
+
+  final Map<String, String> _explanations = {
+    'What was Java originally called?':
+        'Java was originally called "Oak" by James Gosling after an oak tree outside his office window.',
+
+    'Who is known as the creator of Java?':
+        'James Gosling is widely recognized as the father of Java. He led the original design team at Sun Microsystems.',
+
+    'What year was Java Created?':
+        'Java was first developed in 1992, but it was officially released to the public in 1995.',
+
+    'What is the main purpose of writing source code?':
+        'Source code is human-readable text that directs computer behavior and is understandable by programmers.',
+
+    'Which of the following is a correct way to print in Java?':
+        'System.out.println() is the typical method used to display text to the console in Java.',
+
+    'What symbol must end a Java statement?':
+        'Java statements must end with a semicolon to indicate the end of a complete instruction.',
+
+    'Java source code is read:':
+        'Java source code executes top to bottom and reads left to right, like most programming languages.',
+
+    'What is the Java Virtual Machine (JVM)?':
+        'The JVM is a virtual computer that executes Java bytecode, enabling "write once, run anywhere" functionality.',
+
+    'What is bytecode in Java?':
+        'Bytecode is the intermediate representation of Java code that gets executed by the JVM rather than directly by hardware.',
+
+    'What is the purpose of garbage collection in Java?':
+        'Garbage collection automatically reclaims memory from objects that are no longer in use, preventing memory leaks.',
+
+    'Which Java component is responsible for class loading?':
+        'The Class Loader is responsible for loading Java classes into memory when they are referenced by a program.',
+
+    'Which feature separates local and network class namespaces?':
+        'Class Security enforces rules that separate classes from different sources to protect the system.',
+
+    'Which of the following improves code security in Java?':
+        'Bytecode verification checks that code follows Java rules and doesn’t break security constraints.',
+
+    'What does the Bytecode Verifier do?':
+        'The Bytecode Verifier checks code for violations of Java\'s security rules before execution, preventing unsafe operations.',
+
+    'What does "System.out.println()" specifically do in Java?':
+        'System.out.println() outputs a line of text to the standard output stream (usually the console) and adds a line break.',
+  };
+
+  void _nextQuestion() {
+    if (_currentIndex < widget.questions.length - 1) {
+      setState(() {
+        _currentIndex++;
+      });
+    }
+  }
+
+  void _previousQuestion() {
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex--;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final current = widget.questions[_currentIndex];
+    final isFirstQuestion = _currentIndex == 0;
+    final isLastQuestion = _currentIndex == widget.questions.length - 1;
+    final userAnswer = widget.userAnswers[_currentIndex];
+    final correctAnswer = current['answer'];
+    final explanation =
+        _explanations[current['question']] ?? 'No explanation available.';
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF010B1E),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFF010B1E),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 25),
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 45,
+                height: 45,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(5, 5, 15, 5),
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: const Color(0xFF45B6FE), width: 1),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.close, color: Color(0xFF45B6FE)),
+                    SizedBox(width: 8),
+                    Text(
+                      'Close',
+                      style: TextStyle(color: Color(0xFF45B6FE), fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              padding: const EdgeInsets.only(right: 25),
+              iconSize: 30,
+              color: const Color(0xFF45B6FE),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: const Center(
+                child: Text(
+                  'Fundamentals of Java Programming',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Silkscreen',
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: 2,
+            color: const Color(0xFFEF433A),
+          ),
+          const SizedBox(height: 16),
+
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.95,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    border: Border.all(color: Color(0xFFA29193), width: 2),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Answer ${_currentIndex + 1}/${widget.questions.length}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Silkscreen',
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFB8A4A4),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF111D33),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 16),
+                            Center(
+                              child: Text(
+                                current['question'],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          userAnswer == correctAnswer
+                                              ? Color(
+                                                0xFF2ECC71,
+                                              ).withOpacity(0.3)
+                                              : Color(
+                                                0xFFE74C3C,
+                                              ).withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Your Answer:',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            userAnswer ?? 'No answer provided',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF2ECC71).withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Correct Answer:',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            correctAnswer,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF19253E),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Explanation:',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            explanation,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF010B1E),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 5,
+                  offset: Offset(0, -3),
+                ),
+              ],
+            ),
+            child:
+                isLastQuestion
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: _previousQuestion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF19253E),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'BACK',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF877C7F),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'EXIT',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    : isFirstQuestion
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF877C7F),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'EXIT',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: _nextQuestion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF19253E),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'NEXT',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: _previousQuestion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF19253E),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'BACK',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.41,
+                          child: ElevatedButton(
+                            onPressed: _nextQuestion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF19253E),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                  color: Color(0xFF33415C),
+                                  width: 2,
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: const Text(
+                              'NEXT',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+          ),
+        ],
       ),
     );
   }
