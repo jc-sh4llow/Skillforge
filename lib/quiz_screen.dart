@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-// import 'homepagefilenamehere.dart';
-
-
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -438,129 +434,6 @@ class _QuizScreenState extends State<QuizScreen> {
     return exitConfirmed;
   }
 
-  Future<bool> _showConfirmHomeDialog(BuildContext context) async {
-    bool homeConfirmed = false;
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Color(0xFF19253E),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            side: BorderSide(color: Color(0xFF33415C), width: 2),
-          ),
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Exit to Home Screen?',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-
-                Text(
-                  "Are you sure you want to exit the quiz and return to the home screen?",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Your progress will not be saved",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                SizedBox(height: 30),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          homeConfirmed = true;
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFE74C3C),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(
-                              color: Color(0xFF00568D),
-                              width: 2,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                        ),
-                        child: Text(
-                          'HOME',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF14ADFF),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(
-                              color: Color(0xFF00568D),
-                              width: 2,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                        ),
-                        child: Text(
-                          'STAY',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-
-    return homeConfirmed;
-  }
-
   @override
   Widget build(BuildContext context) {
     final current = _questions[_currentIndex];
@@ -572,30 +445,9 @@ class _QuizScreenState extends State<QuizScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF010B1E),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment:
+              MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () async {
-                bool shouldGoHome = await _showConfirmHomeDialog(context);
-                if (shouldGoHome) {
-                  Navigator.of(context,).pushNamedAndRemoveUntil(
-                    '/', //homepage filename here instead of /
-                    (route) => false
-                  );
-                  // need to change '/' into '/homepagefilename.dart'
-                  //for testing lng yung '/'
-                  //right now, sa main quiz screen palang yung balik nito
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 25),
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  width: 45,
-                  height: 45,
-                ),
-              ),
-            ),
             GestureDetector(
               onTap: () async {
                 bool shouldExit = await _showConfirmExitDialog(context);
@@ -622,13 +474,6 @@ class _QuizScreenState extends State<QuizScreen> {
                   ],
                 ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.info_outline),
-              padding: const EdgeInsets.only(right: 25),
-              iconSize: 30,
-              color: const Color(0xFF45B6FE),
-              onPressed: () {},
             ),
           ],
         ),
@@ -827,107 +672,112 @@ class _QuizScreenState extends State<QuizScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
-                                          width:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width *
-                                              0.41,
-                                          child: ElevatedButton(
-                                            onPressed:
-                                                _selectedAnswer == null
-                                                    ? () async {
-                                                      bool shouldSkip =
-                                                          await _showConfirmSkipDialog(
-                                                            context,
-                                                          );
-                                                      if (shouldSkip) {
-                                                        _nextQuestion();
-                                                      }
-                                                    }
-                                                    : null,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Color(
-                                                0xFFE74C3C,
-                                              ),
-                                              foregroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                side: BorderSide(
-                                                  color: Color(0xFF33415C),
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 15,
-                                              ),
-                                              disabledBackgroundColor:
-                                                  Color.fromARGB(
-                                                    (0xFF * 0.5).round(),
-                                                    0xE7,
-                                                    0x4C,
-                                                    0x3C,
-                                                  ),
-                                              disabledForegroundColor: Colors
-                                                  .white
-                                                  .withAlpha(128),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 8,
                                             ),
-                                            child: const Text(
-                                              'SKIP',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
+                                            child: ElevatedButton(
+                                              onPressed:
+                                                  _selectedAnswer == null
+                                                      ? () async {
+                                                        bool shouldSkip =
+                                                            await _showConfirmSkipDialog(
+                                                              context,
+                                                            );
+                                                        if (shouldSkip) {
+                                                          _nextQuestion();
+                                                        }
+                                                      }
+                                                      : null,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color(
+                                                  0xFFE74C3C,
+                                                ),
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  side: BorderSide(
+                                                    color: Color(0xFF33415C),
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 15,
+                                                ),
+                                                disabledBackgroundColor:
+                                                    Color.fromARGB(
+                                                      (0xFF * 0.5).round(),
+                                                      0xE7,
+                                                      0x4C,
+                                                      0x3C,
+                                                    ),
+                                                disabledForegroundColor: Colors
+                                                    .white
+                                                    .withAlpha(128),
+                                              ),
+                                              child: const FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  'SKIP',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-
-                                        Container(
-                                          width:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width *
-                                              0.41,
-                                          child: ElevatedButton(
-                                            onPressed:
-                                                _selectedAnswer != null
-                                                    ? _nextQuestion
-                                                    : null,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Color(
-                                                0xFF19253E,
-                                              ),
-                                              foregroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                side: BorderSide(
-                                                  color: Color(0xFF33415C),
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 15,
-                                              ),
-                                              disabledBackgroundColor:
-                                                  Color.fromARGB(
-                                                    (0xFF * 0.5).round(),
-                                                    0x19,
-                                                    0x25,
-                                                    0x3E,
-                                                  ),
-                                              disabledForegroundColor: Colors
-                                                  .white
-                                                  .withAlpha(128),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 8,
                                             ),
-                                            child: const Text(
-                                              'NEXT',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
+                                            child: ElevatedButton(
+                                              onPressed:
+                                                  _selectedAnswer != null
+                                                      ? _nextQuestion
+                                                      : null,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color(
+                                                  0xFF19253E,
+                                                ),
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  side: BorderSide(
+                                                    color: Color(0xFF33415C),
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 15,
+                                                ),
+                                                disabledBackgroundColor:
+                                                    Color.fromARGB(
+                                                      (0xFF * 0.5).round(),
+                                                      0x19,
+                                                      0x25,
+                                                      0x3E,
+                                                    ),
+                                                disabledForegroundColor: Colors
+                                                    .white
+                                                    .withAlpha(128),
+                                              ),
+                                              child: const FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  'NEXT',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
